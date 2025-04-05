@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Lamp : MonoBehaviour
 {
-    public Light pointLight;
-
     public bool isKeyLamp;
 
     public Color Keycolor;
@@ -12,9 +10,16 @@ public class Lamp : MonoBehaviour
 
     public float radiusForLerp;
     
+    MeshRenderer meshRenderer;
+    
     private void Start()
     {
-        pointLight.color = StartColor;
+        meshRenderer = GetComponent<MeshRenderer>();
+        
+        var material = meshRenderer.material;
+        material.SetColor("_LampColor", StartColor);
+        meshRenderer.material = material;
+        
         if (!isKeyLamp)
         {
             Destroy(GetComponent<SphereCollider>());
@@ -30,7 +35,12 @@ public class Lamp : MonoBehaviour
         }
 
         float distance = Vector3.Distance(other.transform.position, transform.position);
-        pointLight.color = Color.Lerp(Keycolor, StartColor, distance / radiusForLerp);
+        
+        Color newColor = Color.Lerp(Keycolor, StartColor, distance / radiusForLerp);
+        
+        var material = meshRenderer.material;
+        material.SetColor("_LampColor", newColor);
+        meshRenderer.material = material;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,7 +50,8 @@ public class Lamp : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        pointLight.color = StartColor;
-
+        var material = meshRenderer.material;
+        material.SetColor("_LampColor", StartColor);
+        meshRenderer.material = material;
     }
 }
