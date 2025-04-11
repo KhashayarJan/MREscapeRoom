@@ -8,16 +8,24 @@ public class Lamp : MonoBehaviour
     public Color Keycolor;
     public Color StartColor;
 
-    public float radiusForLerp;
+    float radiusForLerp;
     
+    [SerializeField]
     MeshRenderer meshRenderer;
+
+    public string materialColorName;
+    
+    
     
     private void Start()
     {
-        meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer == null)
+            meshRenderer = GetComponent<MeshRenderer>();
         
         var material = meshRenderer.material;
-        material.SetColor("_LampColor", StartColor);
+        //material.SetColor("_LampColor", StartColor);
+        material.SetColor(materialColorName, StartColor);
+        
         meshRenderer.material = material;
         
         if (!isKeyLamp)
